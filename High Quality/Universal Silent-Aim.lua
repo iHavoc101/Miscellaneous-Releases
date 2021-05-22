@@ -5,7 +5,7 @@
     \___/|_||_|_|\_/\___|_| /__/\__,_|_| |___/_|_\___|_||_\__| /_/ \_\_|_|_|_|
 
     Source:
-        https://raw.githubusercontent.com/icuck/Miscellaneous-Releases/main/SPTS-CR.lua
+        https://raw.githubusercontent.com/iHavoc101/Miscellaneous-Releases/main/High%20Quality/Universal%20Silent-Aim.lua
     Version:
         0.1.0
     Date:
