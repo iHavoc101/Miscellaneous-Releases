@@ -8,8 +8,11 @@ local MaidModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/Qu
 local Camera = workspace.CurrentCamera
 
 -- // Variables \\ --
+-- [ Optimization ] --
 local MakeCFrame, MakeVector3, WorldToViewportPoint, ClampNumber = CFrame.new, Vector3.new, Camera.WorldToViewportPoint, math.clamp
 local MakeDrawing = Drawing.new
+
+local SizeOffset = MakeVector3(0.05, 0.05, 0.05)
 
 -- // Functions \\ --
 local function FetchViewportPoint(Position)
@@ -97,7 +100,7 @@ function MainModule.new()
             ViewportPoints = FetchViewportPoints(BoxHandleAdornment.CFrame, BoxHandleAdornment.Size)
         elseif typeof(Adornee) == "Instance" then
             if Adornee:IsA("BasePart") then
-                ViewportPoints = FetchViewportPoints(Adornee.CFrame, Adornee.Size)
+                ViewportPoints = FetchViewportPoints(Adornee.CFrame, Adornee.Size + SizeOffset)
             elseif Adornee:IsA("Model") then
                 ViewportPoints = FetchViewportPoints(Adornee:GetBoundingBox())
             end
