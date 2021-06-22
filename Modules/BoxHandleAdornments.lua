@@ -94,6 +94,11 @@ function MainModule.new()
     }
 
     BoxHandleAdornment._Maid:GiveTask(RunService.RenderStepped:Connect(function()
+        local _, OnScreen = WorldToViewportPoint(Camera, BoxHandleAdornment.CFrame.Position)
+        if not OnScreen then
+            return
+        end
+
         local ViewportPoints;
         local Adornee = BoxHandleAdornment.Adornee
         if not Adornee then
@@ -124,6 +129,7 @@ function MainModule.new()
         end
     end))
 
+    BoxHandleAdornment.Destroy = MaidModule.Destroy
     return setmetatable(BoxHandleAdornment, MainModule)
 end
 
