@@ -95,41 +95,42 @@ function MainModule.new()
 
     BoxHandleAdornment._Maid:GiveTask(RunService.RenderStepped:Connect(function()
         local _, OnScreen = WorldToViewportPoint(Camera, BoxHandleAdornment.CFrame.Position)
-        if not OnScreen then
-            return
-        end
-
-        local ViewportPoints;
-        local Adornee = BoxHandleAdornment.Adornee
-        if not Adornee then
-            ViewportPoints = FetchViewportPoints(BoxHandleAdornment.CFrame, BoxHandleAdornment.Size)
-        elseif typeof(Adornee) == "Instance" then
-            if Adornee:IsA("BasePart") then
-                ViewportPoints = FetchViewportPoints(Adornee.CFrame, Adornee.Size + SizeOffset)
-            elseif Adornee:IsA("Model") then
-                ViewportPoints = FetchViewportPoints(Adornee:GetBoundingBox())
+        if OnScreen and BoxHandleAdornment.Visible then
+            local ViewportPoints;
+            local Adornee = BoxHandleAdornment.Adornee
+            if not Adornee then
+                ViewportPoints = FetchViewportPoints(BoxHandleAdornment.CFrame, BoxHandleAdornment.Size)
+            elseif typeof(Adornee) == "Instance" then
+                if Adornee:IsA("BasePart") then
+                    ViewportPoints = FetchViewportPoints(Adornee.CFrame, Adornee.Size + SizeOffset)
+                elseif Adornee:IsA("Model") then
+                    ViewportPoints = FetchViewportPoints(Adornee:GetBoundingBox())
+                end
             end
-        end
-
-        local Distance = (Camera.CFrame.Position - BoxHandleAdornment.CFrame.Position).Magnitude
-        for i,v in pairs(BoxHandleAdornment._Drawings) do
-            v.Visible = BoxHandleAdornment.Visible
-            v.Filled = BoxHandleAdornment.Filled
-            v.Color = BoxHandleAdornment.Color3
-            v.Transparency = ClampNumber(1 - BoxHandleAdornment.Transparency, 0, 1)
-            v.Thickness = ClampNumber(Distance * 0.01, 0.25, 1)
-
-            local Surface = ViewportPoints[i]
-            if Surface then
-                v.PointA = Surface[1]
-                v.PointB = Surface[2]
-                v.PointC = Surface[3]
-                v.PointD = Surface[4]
+    
+            local Distance = (Camera.CFrame.Position - BoxHandleAdornment.CFrame.Position).Magnitude
+            for i,v in pairs(BoxHandleAdornment._Drawings) do
+                v.Visible = true
+                v.Filled = BoxHandleAdornment.Filled
+                v.Color = BoxHandleAdornment.Color3
+                v.Transparency = ClampNumber(1 - BoxHandleAdornment.Transparency, 0, 1)
+                v.Thickness = ClampNumber(Distance * 0.01, 0.25, 1)
+    
+                local Surface = ViewportPoints[i]
+                if Surface then
+                    v.PointA = Surface[1]
+                    v.PointB = Surface[2]
+                    v.PointC = Surface[3]
+                    v.PointD = Surface[4]
+                end
+            end
+        else
+            for i,v in pairs(BoxHandleAdornment._Drawings) do
+                v.Visible = false
             end
         end
     end))
 
-    BoxHandleAdornment.Destroy = MaidModule.Destroy
     return setmetatable(BoxHandleAdornment, MainModule)
 end
 
