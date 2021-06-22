@@ -148,7 +148,4 @@ function MainModule:Destroy()
     self._Maid:Destroy()
 end
 
-local e = MainModule.new()
-e.Adornee = workspace.ihavoc101
-
 return MainModule
