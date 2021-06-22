@@ -75,8 +75,10 @@ function MainModule.new()
         Outlined        = true,
         Color3          = Color3.new(1, 1, 1),
         Transparency    = 0,
+        Adornee         = nil,
         CFrame          = MakeCFrame(),
         Size            = MakeVector3(),
+
         _Maid           = MaidModule.new(),
         _Drawings       = {
             UpperSurface = MakeDrawing("Quad");
@@ -89,20 +91,32 @@ function MainModule.new()
     }
 
     BoxHandleAdornment._Maid:GiveTask(RunService.RenderStepped:Connect(function()
-        local ViewportPoints = FetchViewportPoints(BoxHandleAdornment.CFrame, BoxHandleAdornment.Size)
+        local ViewportPoints;
+        local Adornee = BoxHandleAdornment.Adornee
+        if not Adornee then
+            ViewportPoints = FetchViewportPoints(BoxHandleAdornment.CFrame, BoxHandleAdornment.Size)
+        elseif typeof(Adornee) == "Instance" then
+            if Adornee:IsA("BasePart") then
+                ViewportPoints = FetchViewportPoints(Adornee.CFrame, Adornee.Size)
+            elseif Adornee:IsA("Model") then
+                ViewportPoints = FetchViewportPoints(Adornee:GetBoundingBox())
+            end
+        end
+
         local Distance = (Camera.CFrame.Position - BoxHandleAdornment.CFrame.Position).Magnitude
         for i,v in pairs(BoxHandleAdornment._Drawings) do
             v.Visible = BoxHandleAdornment.Visible
             v.Filled = BoxHandleAdornment.Filled
             v.Color = BoxHandleAdornment.Color3
-            v.Transparency = 1 - BoxHandleAdornment.Transparency
+            v.Transparency = ClampNumber(1 - BoxHandleAdornment.Transparency, 0, 1)
             v.Thickness = ClampNumber(Distance * 0.01, 0.25, 1)
 
-            if ViewportPoints[i] then
-                v.PointA = ViewportPoints[i][1]
-                v.PointB = ViewportPoints[i][2]
-                v.PointC = ViewportPoints[i][3]
-                v.PointD = ViewportPoints[i][4]
+            local Surface = ViewportPoints[i]
+            if Surface then
+                v.PointA = Surface[1]
+                v.PointB = Surface[2]
+                v.PointC = Surface[3]
+                v.PointD = Surface[4]
             end
         end
     end))
@@ -130,5 +144,8 @@ function MainModule:Destroy()
     end
     self._Maid:Destroy()
 end
+
+local e = MainModule.new()
+e.Adornee = workspace.ihavoc101
 
 return MainModule
