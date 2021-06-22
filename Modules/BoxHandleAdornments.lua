@@ -125,10 +125,10 @@ function MainModule:Clone()
 end
 
 function MainModule:Destroy()
-    self._Maid:Destroy()
     for i,v in pairs(self._Drawings) do
         v:Remove()
     end
+    self._Maid:Destroy()
 end
 
 return MainModule
