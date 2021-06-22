@@ -100,12 +100,17 @@ function MainModule.new()
             local Adornee = BoxHandleAdornment.Adornee
             if not Adornee then
                 ViewportPoints = FetchViewportPoints(BoxHandleAdornment.CFrame, BoxHandleAdornment.Size)
-            elseif typeof(Adornee) == "Instance" then
+            elseif typeof(Adornee) == "Instance" and Adornee.Parent ~= nil then
                 if Adornee:IsA("BasePart") then
                     ViewportPoints = FetchViewportPoints(Adornee.CFrame, Adornee.Size + SizeOffset)
                 elseif Adornee:IsA("Model") then
                     ViewportPoints = FetchViewportPoints(Adornee:GetBoundingBox())
                 end
+            else
+                for i,v in pairs(BoxHandleAdornment._Drawings) do
+                    v.Visible = false
+                end
+                return
             end
     
             local Distance = (Camera.CFrame.Position - BoxHandleAdornment.CFrame.Position).Magnitude
